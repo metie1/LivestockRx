@@ -1,31 +1,48 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const login = async (req, res) => {
+
+// 로그인 컨트롤러
+exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
+    // 사용자 확인
     const user = await User.findOne({ where: { username } });
-    if (!user || !await bcrypt.compare(password, user.password)) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
-    res.status(200).json({ message: 'Login successful' });
-  } catch (error) {
+    // 비밀번호 확인
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    // JWT 토큰 생성
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token });
+  } catch (err) {
+    console.error('Error logging in:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-const signup = async (req, res) => {
-  const { username, password, name, birthdate, residence } = req.body;
+// 회원가입 컨트롤러
+exports.register = async (req, res) => {
+  const { username, password } = req.body;
 
   try {
+    // 비밀번호 해시화
     const hashedPassword = await bcrypt.hash(password, 10);
-    await User.create({ username, password: hashedPassword, name, birthdate, residence });
-    res.status(201).json({ message: 'User created' });
-  } catch (error) {
+
+    // 사용자 생성
+    const user = await User.create({ username, email, password: hashedPassword, role });
+
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error('Error registering user:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
-
-module.exports = { login, signup };

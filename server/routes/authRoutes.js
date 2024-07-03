@@ -1,9 +1,11 @@
 const express = require('express');
-const { login, signup } = require('../controllers/authController');
-
 const router = express.Router();
+const { login, register } = require('../controllers/authController'); // 컨트롤러 파일 경로
 
+// 로그인 라우트
 router.post('/login', login);
-router.post('/signup', signup);
+
+// 회원가입 라우트
+router.post('/register', register);
 
 module.exports = router;
