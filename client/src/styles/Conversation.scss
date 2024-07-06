@@ -1,0 +1,40 @@
+.conversation-form {
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 300px;
+  
+    form {
+      display: flex;
+      flex-direction: column;
+  
+      label {
+        margin-bottom: 10px;
+      }
+  
+      fieldset {
+        margin-bottom: 15px;
+        border: none;
+      }
+  
+      .submit-button, .reset-button {
+        width: 100px;
+        padding: 5px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+      }
+  
+      .submit-button {
+        background-color: green;
+        color: white;
+      }
+  
+      .reset-button {
+        background-color: gray;
+        color: white;
+      }
+    }
+  }
+  

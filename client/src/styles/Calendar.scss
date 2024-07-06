@@ -1,0 +1,202 @@
+/* Calendar.scss */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.switches {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.cow .slider {
+  background-color: brown;
+}
+
+.cow input:checked + .slider {
+  background-color: brown;
+}
+
+.pig .slider {
+  background-color: pink;
+}
+
+.pig input:checked + .slider {
+  background-color: pink;
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.cow-row {
+  background-color: #ffecb3;
+}
+
+.pig-row {
+  background-color: #ffcccb;
+}
+
+.event-form-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* 모달 창을 맨 앞으로 보이게 설정 */
+}
+
+.event-form {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-form input, .event-form select {
+  margin-bottom: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.event-form .submit-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.event-form .cancel-button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: 10px;
+}
+
+.calendar-container {
+  min-width: 700px;
+}
+
+.fc .fc-daygrid-day-top {
+  display: flex;
+  justify-content: center; /* 날짜를 중앙 정렬 */
+  align-items: center;     /* 날짜를 중앙 정렬 */
+}
+
+.fc .fc-daygrid-day-number {
+  display: flex;
+  justify-content: center; /* 날짜 숫자를 중앙 정렬 */
+  align-items: center;     /* 날짜 숫자를 중앙 정렬 */
+  width: 100%;             /* 전체 너비 사용 */
+  height: 100%;            /* 전체 높이 사용 */
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.fc-toolbar-chunk:first-child {
+  order: 1;
+  position: absolute;
+  left: calc(50% + 120px);
+}
+
+.fc-toolbar-chunk:nth-child(2) {
+  order: 2;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.fc-toolbar-chunk:nth-child(3) {
+  order: 3;
+  position: absolute;
+  right: 10px; /* Adjust as needed for spacing */
+}
