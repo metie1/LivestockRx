@@ -6,6 +6,6 @@ const { login, register } = require('../controllers/authController'); // 컨트�
 router.post('/login', login);
 
 // 회원가입 라우트
-router.post('/register', register);
+router.post('/signup', register);
 
 module.exports = router;

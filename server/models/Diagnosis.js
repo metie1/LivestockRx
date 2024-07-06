@@ -1,31 +1,35 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
-const Symptom = require('./Symptom');
+module.exports = (sequelize, DataTypes) => {
+    const Diagnosis = sequelize.define('Diagnosis', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        symptom_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        diagnosis: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        suggested_medication: {
+            type: DataTypes.STRING,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'created_at',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'updated_at',
+        },
+    }, {
+        timestamps: false,
+        tableName: 'Diagnoses',
+    });
 
-const Diagnosis = sequelize.define('Diagnosis', {
-    symptom_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Symptom,
-            key: 'id'
-        }
-    },
-    diagnosis: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    suggested_medication: {
-        type: DataTypes.STRING,
-        allowNull: true
-    }
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: false
-});
-
-Symptom.hasMany(Diagnosis, { foreignKey: 'symptom_id', onDelete: 'CASCADE' });
-Diagnosis.belongsTo(Symptom, { foreignKey: 'symptom_id' });
-
-module.exports = Diagnosis;
+    return Diagnosis;
+};

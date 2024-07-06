@@ -1,26 +1,39 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
-const Animal = require('./Animal');
-const User = require('./User');
+module.exports = (sequelize, DataTypes) => {
+    const Vaccination = sequelize.define('Vaccination', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        animal_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        vaccine_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        vet_id: {
+            type: DataTypes.INTEGER,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'created_at',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'updated_at',
+        },
+    }, {
+        timestamps: false,
+        tableName: 'Vaccinations',
+    });
 
-const Vaccination = sequelize.define('Vaccination', {
-    vaccine_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false
-    }
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: false
-});
-
-Animal.hasMany(Vaccination, { foreignKey: 'animal_id', onDelete: 'CASCADE' });
-User.hasMany(Vaccination, { foreignKey: 'vet_id', onDelete: 'SET NULL' });
-Vaccination.belongsTo(Animal, { foreignKey: 'animal_id' });
-Vaccination.belongsTo(User, { foreignKey: 'vet_id' });
-
-module.exports = Vaccination;
+    return Vaccination;
+};

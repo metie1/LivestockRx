@@ -1,34 +1,44 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
-const Animal = require('./Animal');
-const User = require('./User');
+module.exports = (sequelize, DataTypes) => {
+    const Medication = sequelize.define('Medication', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        animal_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        medication_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        dosage: {
+            type: DataTypes.STRING,
+        },
+        start_date: {
+            type: DataTypes.DATE,
+        },
+        end_date: {
+            type: DataTypes.DATE,
+        },
+        vet_id: {
+            type: DataTypes.INTEGER,
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'created_at',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'updated_at',
+        },
+    }, {
+        timestamps: false,
+        tableName: 'Medications',
+    });
 
-const Medication = sequelize.define('Medication', {
-    medication_name: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    dosage: {
-        type: DataTypes.STRING,
-        allowNull: true
-    },
-    start_date: {
-        type: DataTypes.DATE,
-        allowNull: true
-    },
-    end_date: {
-        type: DataTypes.DATE,
-        allowNull: true
-    }
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: false
-});
-
-Animal.hasMany(Medication, { foreignKey: 'animal_id', onDelete: 'CASCADE' });
-User.hasMany(Medication, { foreignKey: 'vet_id', onDelete: 'SET NULL' });
-Medication.belongsTo(Animal, { foreignKey: 'animal_id' });
-Medication.belongsTo(User, { foreignKey: 'vet_id' });
-
-module.exports = Medication;
+    return Medication;
+};

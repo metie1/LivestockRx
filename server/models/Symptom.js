@@ -1,35 +1,39 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
-const Animal = require('./Animal');
+module.exports = (sequelize, DataTypes) => {
+    const Symptom = sequelize.define('Symptom', {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        animal_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        symptom_description: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        severity: {
+            type: DataTypes.ENUM('mild', 'moderate', 'severe'),
+        },
+        createdAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'created_at',
+        },
+        updatedAt: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+            field: 'updated_at',
+        },
+    }, {
+        timestamps: false,
+        tableName: 'Symptoms',
+    });
 
-const Symptom = sequelize.define('Symptom', {
-    animal_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-            model: Animal,
-            key: 'id'
-        }
-    },
-    symptom_description: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    date: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    severity: {
-        type: DataTypes.ENUM('mild', 'moderate', 'severe'),
-        allowNull: true
-    }
-}, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: false
-});
-
-Animal.hasMany(Symptom, { foreignKey: 'animal_id', onDelete: 'CASCADE' });
-Symptom.belongsTo(Animal, { foreignKey: 'animal_id' });
-
-module.exports = Symptom;
+    return Symptom;
+};
