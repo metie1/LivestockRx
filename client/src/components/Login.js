@@ -15,16 +15,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const response = await axios.post('http://localhost:5000/api/auth/login', { username, password });
-      console.log('Login successful', response.data);
-      setLoginError(false); // 로그인 성공 시 오류 상태를 false로 설정
+      console.log('Login response:', response.data); // 응답 로그 추가
       localStorage.setItem('token', response.data.token);
+
       setError(''); // 오류 메시지 초기화
       navigate('/'); // 메인 페이지로 리디렉션
+
+      setLoginError(false); // 로그인 성공 시 오류 상태를 false로 설정
     } catch (err) {
-      console.error('Login error', err);
-      setError('로그인 실패: 아이디나 비밀번호를 확인하세요.');
+      console.error('Error:', err);
+      setError(err.response?.data?.message || err.message || 'Unknown error occurred');
+      
       setLoginError(true); // 로그인 오류 발생 시 오류 상태를 true로 설정
     }
     finally {

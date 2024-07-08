@@ -2,11 +2,12 @@ module.exports = (sequelize, DataTypes) => {
     const Animal = sequelize.define('Animal', {
         id: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
         },
         tag_number: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: false,
             unique: true,
         },
@@ -16,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         birth_date: {
             type: DataTypes.DATE,
+            allowNull: true,
         },
         gender: {
             type: DataTypes.ENUM('male', 'female'),
@@ -23,24 +25,24 @@ module.exports = (sequelize, DataTypes) => {
         },
         weight: {
             type: DataTypes.DECIMAL(5, 2),
+            allowNull: true,
         },
-        createdAt: {
+        created_at: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'created_at',
+            allowNull: true,
         },
-        updatedAt: {
+        updated_at: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'updated_at',
-        },
+            allowNull: true,
+        }
     }, {
-        timestamps: false,
         tableName: 'Animals',
+        timestamps: true,
+        underscored: true,
     });
 
     Animal.associate = function(models) {
-        Animal.hasMany(models.CalendarEvent, { foreignKey: 'animal_id', onDelete: 'CASCADE' });
+        Animal.hasMany(models.CalendarEvent, { foreignKey: 'animal_id', as: 'events' });
     };
 
     return Animal;

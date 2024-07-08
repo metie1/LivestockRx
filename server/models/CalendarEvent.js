@@ -2,11 +2,12 @@ module.exports = (sequelize, DataTypes) => {
     const CalendarEvent = sequelize.define('CalendarEvent', {
         id: {
             type: DataTypes.INTEGER,
-            autoIncrement: true,
             primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
         },
         title: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         start: {
@@ -15,35 +16,36 @@ module.exports = (sequelize, DataTypes) => {
         },
         end: {
             type: DataTypes.DATE,
+            allowNull: true,
         },
         backgroundColor: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
+            allowNull: true,
         },
         animal_id: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
         event_type: {
-            type: DataTypes.ENUM('vaccination', 'medication'),
+            type: DataTypes.ENUM('vaccination', 'medication', 'checkup'),
             allowNull: false,
         },
-        createdAt: {
+        created_at: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'created_at',
+            allowNull: true,
         },
-        updatedAt: {
+        updated_at: {
             type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'updated_at',
-        },
+            allowNull: true,
+        }
     }, {
-        timestamps: false,
         tableName: 'CalendarEvents',
+        timestamps: true,
+        underscored: true,
     });
 
     CalendarEvent.associate = function(models) {
-        CalendarEvent.belongsTo(models.Animal, { foreignKey: 'animal_id', onDelete: 'CASCADE' });
+        CalendarEvent.belongsTo(models.Animal, { foreignKey: 'animal_id', as: 'animal' });
     };
 
     return CalendarEvent;

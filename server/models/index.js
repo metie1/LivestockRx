@@ -1,46 +1,35 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/dbConfig');
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.json')[env];
+const db = {};
 
-const User = require('./User')(sequelize, DataTypes);
-const Animal = require('./Animal')(sequelize, DataTypes);
-const Symptom = require('./Symptom')(sequelize, DataTypes);
-const Diagnosis = require('./Diagnosis')(sequelize, DataTypes);
-const Medication = require('./Medication')(sequelize, DataTypes);
-const Vaccination = require('./Vaccination')(sequelize, DataTypes);
-const CalendarEvent = require('./CalendarEvent')(sequelize, DataTypes);
+let sequelize;
+if (config.use_env_variable) {
+    sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+    sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
-// Define associations
-Animal.hasMany(Symptom, { foreignKey: 'animal_id' });
-Symptom.belongsTo(Animal, { foreignKey: 'animal_id' });
+fs
+    .readdirSync(__dirname)
+    .filter(file => {
+        return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+    })
+    .forEach(file => {
+        const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+        db[model.name] = model;
+    });
 
-Symptom.hasMany(Diagnosis, { foreignKey: 'symptom_id' });
-Diagnosis.belongsTo(Symptom, { foreignKey: 'symptom_id' });
-
-Animal.hasMany(Medication, { foreignKey: 'animal_id' });
-Medication.belongsTo(Animal, { foreignKey: 'animal_id' });
-
-Animal.hasMany(Vaccination, { foreignKey: 'animal_id' });
-Vaccination.belongsTo(Animal, { foreignKey: 'animal_id' });
-
-Animal.hasMany(CalendarEvent, { foreignKey: 'animal_id' });
-CalendarEvent.belongsTo(Animal, { foreignKey: 'animal_id' });
-
-
-sequelize.sync()
-.then(() => {
-    console.log('Database & tables created!');
+    Object.keys(db).forEach(modelName => {
+        if (db[modelName].associate) {
+            db[modelName].associate(db);
+        }
 });
 
-const db = {
-    User,
-    Animal,
-    Symptom,
-    Diagnosis,
-    Medication,
-    Vaccination,
-    CalendarEvent,
-    sequelize,
-    Sequelize,
-};
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;

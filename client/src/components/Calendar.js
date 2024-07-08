@@ -14,30 +14,41 @@ const Calendar = () => {
     start: '',
     end: '',
     backgroundColor: '',
-    type: 'cow' // default type
+    animal_id: '',
+    event_type: 'vaccination'
   });
   const [showForm, setShowForm] = useState(false);
+  const [animals, setAnimals] = useState([]);
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const { data } = await axios.get('http://localhost:5000/api/calendar/events');
-        setEvents(data.map(event => ({
-          title: event.title,
-          start: event.start,
-          end: event.end,
-          backgroundColor: event.backgroundColor,
-          className: event.type === '소' ? 'cow-event' : 'pig-event'
-        })));
-      } catch (err) {
-        console.error('Error fetching events:', err);
-      }
-    };
     fetchEvents();
+    fetchAnimals();
   }, []);
 
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/calendar/events');
+      setEvents(response.data.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: event.end ? new Date(event.end) : null,
+      })));
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    }
+  };
+
+  const fetchAnimals = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/animals');
+      setAnimals(response.data);
+    } catch (error) {
+      console.error('Error fetching animals:', error);
+    }
+  };
+
   const handleDateClick = (arg) => {
-    setNewEvent({ ...newEvent, date: arg.dateStr });
+    setNewEvent({ ...newEvent, start: arg.dateStr });
     setShowForm(true);
   };
 
@@ -48,37 +59,19 @@ const Calendar = () => {
 
   const handleEventSubmit = async (e) => {
     e.preventDefault();
-    const { title, start, end, backgroundColor, type } = newEvent;
-
-    if (window.confirm('저장하시겠습니까?')) {
-      try {
-        const response = await axios.post('/api/calendar/events', {
-          title,
-          start,
-          end,
-          backgroundColor,
-          type
-        });
-
-        if (response.status === 201) {
-          setEvents([...events, {
-            title,
-            start,
-            end,
-            backgroundColor,
-            className: type === 'cow' ? 'cow-event' : 'pig-event'
-          }]);
-          setNewEvent({ title: '', start: '', end: '', backgroundColor: '', type: 'cow' });
-          setShowForm(false);
-        }
-      } catch (error) {
-        console.error('Error adding event:', error);
-      }
+    try {
+      console.log('Submitting event:', newEvent);
+      const response = await axios.post('http://localhost:5000/api/calendar/events', newEvent);
+      console.log('Event created:', response.data);
+      setShowForm(false);
+      fetchEvents();
+    } catch (error) {
+      console.error('Error adding event:', error.response?.data || error.message);
     }
   };
 
   const filteredEvents = events.filter(event =>
-    (showCows && event.className === 'cow-event') || (showPigs && event.className === 'pig-event')
+    (showCows && event.species === 'cow') || (showPigs && event.species === 'pig')
   );
 
   return (
@@ -86,15 +79,15 @@ const Calendar = () => {
       <div className="header">
         <div className="switches">
           <label className="switch cow">
-            <input type="checkbox" id="cowSwitch" checked={showCows} onChange={() => setShowCows(!showCows)} />
+            <input type="checkbox" checked={showCows} onChange={() => setShowCows(!showCows)} />
             <span className="slider round"></span>
           </label>
-          <label htmlFor="cowSwitch">소</label>
+          <label>소</label>
           <label className="switch pig">
-            <input type="checkbox" id="pigSwitch" checked={showPigs} onChange={() => setShowPigs(!showPigs)} />
+            <input type="checkbox" checked={showPigs} onChange={() => setShowPigs(!showPigs)} />
             <span className="slider round"></span>
           </label>
-          <label htmlFor="pigSwitch">돼지</label>
+          <label>돼지</label>
         </div>
       </div>
 
@@ -125,33 +118,41 @@ const Calendar = () => {
               required
             />
             <input
-              type="text"
+              type="date"
               name="start"
               value={newEvent.start}
               onChange={handleInputChange}
-              placeholder="YYYY-MM-DD"
-              readOnly
+              required
             />
             <input
-              type="text"
+              type="date"
               name="end"
               value={newEvent.end}
               onChange={handleInputChange}
-              placeholder="종료 날짜 (선택사항)"
             />
             <input
               type="color"
               name="backgroundColor"
               value={newEvent.backgroundColor}
               onChange={handleInputChange}
-              placeholder="배경색 (선택사항)"
             />
-            <select name="type" value={newEvent.type} onChange={handleInputChange}>
-              <option value="cow">소</option>
-              <option value="pig">돼지</option>
+            <select name="animal_id" value={newEvent.animal_id} onChange={handleInputChange} required>
+              <option value="">동물 선택</option>
+              {animals.map(animal => (
+                <option key={animal.id} value={animal.id}>
+                  {animal.tag_number} ({animal.species})
+                </option>
+              ))}
             </select>
-            <button type="submit" className="submit-button">작성</button>
-            <button type="button" className="cancel-button" onClick={() => setShowForm(false)}>취소</button>
+            <select name="event_type" value={newEvent.event_type} onChange={handleInputChange} required>
+              <option value="vaccination">예방접종</option>
+              <option value="medication">투약</option>
+              <option value="checkup">검진</option>
+            </select>
+            <div>
+              <button type="submit" className="submit-button">작성</button>
+              <button type="button" className="cancel-button" onClick={() => setShowForm(false)}>취소</button>
+            </div>
           </form>
         </div>
       )}

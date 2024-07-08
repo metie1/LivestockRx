@@ -1,0 +1,23 @@
+{
+    "development": {
+        "username": "root",
+        "password": "lst09011",
+        "database": "data_DB",
+        "host": "livestockrxdb-1.cl0ua2i0m477.us-east-2.rds.amazonaws.com",
+        "dialect": "mysql"
+    },
+    "test": {
+        "username": "root",
+        "password": "lst09011",
+        "database": "data_DB_test",
+        "host": "livestockrxdb-1.cl0ua2i0m477.us-east-2.rds.amazonaws.com",
+        "dialect": "mysql"
+    },
+    "production": {
+        "username": "root",
+        "password": "lst09011",
+        "database": "data_DB_production",
+        "host": "livestockrxdb-1.cl0ua2i0m477.us-east-2.rds.amazonaws.com",
+        "dialect": "mysql"
+    }
+}

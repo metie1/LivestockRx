@@ -17,25 +17,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // 라우트 설정
 app.use('/api/auth', authRoutes);
+app.use('/api/', animalRoutes);
 app.use('/api/calendar', calendarRoutes);
 
 app.use('/api', animalRoutes);
 app.use('/api', conversationRoutes);
 app.use('/api/vaccination', vaccinationRoutes);
 
-/*
-// 서버 시작
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
-*/
 
 const PORT = process.env.PORT || 5000;
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
+  console.log('Database synchronized');
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 }).catch(err => {
-  console.error('Unable to connect to the database:', err);
+  console.error('Unable to sync database:', err);
 });

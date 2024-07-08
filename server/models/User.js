@@ -6,16 +6,16 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
         },
         username: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(50),
             allowNull: false,
             unique: true,
         },
         password: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(255),
             allowNull: false,
         },
         email: {
-            type: DataTypes.STRING,
+            type: DataTypes.STRING(100),
             allowNull: false,
             unique: true,
         },
@@ -23,19 +23,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('farmer', 'vet'),
             allowNull: false,
         },
-        createdAt: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'created_at',
-        },
-        updatedAt: {
-            type: DataTypes.DATE,
-            defaultValue: DataTypes.NOW,
-            field: 'updated_at',
-        },
     }, {
-        timestamps: false,
-        tableName: 'Users',
+        timestamps: true,
+        createdAt: 'created_at',
+        updatedAt: false, // 'updated_at' 컬럼을 사용하지 않음
     });
 
     return User;

@@ -15,16 +15,16 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/signup', { username, password, email, role });
-      console.log('SignUp successful', response.data);
+      await axios.post('http://localhost:5000/api/auth/signup', { username, password, email, role });
       setError(''); // 오류 메시지 초기화
-      localStorage.setItem('token', response.data.token);
-      navigate('/'); // 메인 페이지로 리디렉션
+      //localStorage.setItem('token', response.data.token);
+      navigate('/login'); // 로그인 페이지로 리디렉션
     } 
     catch (err) {
-      console.error('SignUp error', err);
-      setError(err.response.data.error || '회원가입 오류');
+      console.error('Error:', err);
+      setError(err.response?.data?.message || err.message || 'Unknown error occurred');
     }
     finally {
       setLoading(false);

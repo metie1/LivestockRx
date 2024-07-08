@@ -9,7 +9,7 @@ const NavigationBar = () => {
         <Link to="/">LivestockRx</Link>
       </div>
       <div className="menu">
-        <Link to="/conversation">설문</Link>
+        <Link to="/conversation">대동물 Health</Link>
         <Link to="/calendar">캘린더</Link>
         <Link to="/vaccin">예방접종 기록</Link>
         <Link to="/subscribe">구독</Link>
