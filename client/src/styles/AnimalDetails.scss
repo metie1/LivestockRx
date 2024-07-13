@@ -1,0 +1,87 @@
+.animal-details-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.animal-details-title {
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.animal-details-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.animal-info, .animal-metadata {
+  flex: 1;
+}
+
+h3 {
+  color: #444;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 5px;
+}
+
+p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
+strong {
+  color: #555;
+}
+
+.animal-records {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.records-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.record-item:last-child {
+  border-bottom: none;
+}
+
+.record-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.record-date, .record-dosage {
+  color: #666;
+}
+
+.loading, .error, .not-found {
+  text-align: center;
+  color: #666;
+  margin-top: 50px;
+  font-size: 18px;
+}
+
+.error {
+  color: #d9534f;
+}

@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.ENUM('vaccination', 'medication', 'checkup'),
             allowNull: false,
         },
+        user_id: {  // 새로 추가된 필드
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         created_at: {
             type: DataTypes.DATE,
             allowNull: true,
@@ -46,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
 
     CalendarEvent.associate = function(models) {
         CalendarEvent.belongsTo(models.Animal, { foreignKey: 'animal_id', as: 'animal' });
+        CalendarEvent.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });  // 새로운 관계 추가
     };
 
     return CalendarEvent;

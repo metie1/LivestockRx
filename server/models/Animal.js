@@ -34,15 +34,36 @@ module.exports = (sequelize, DataTypes) => {
         updated_at: {
             type: DataTypes.DATE,
             allowNull: true,
+        },
+        user_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
+        slaughter_date: {
+            type: DataTypes.DATE,
+            allowNull: true,
+        },
+        memo: {
+            type: DataTypes.TEXT,
+            allowNull: true,
         }
     }, {
         tableName: 'Animals',
         timestamps: true,
         underscored: true,
+        indexes: [
+            // Add a unique constraint on the combination of tag_number and user_id
+            {
+                unique: true,
+                fields: ['tag_number', 'user_id']
+            }
+        ]
     });
 
     Animal.associate = function(models) {
-        Animal.hasMany(models.CalendarEvent, { foreignKey: 'animal_id', as: 'events' });
+        Animal.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+        Animal.hasMany(models.Vaccination, { foreignKey: 'animal_id', as: 'vaccinations' });
+        Animal.hasMany(models.MedicationRecord, { foreignKey: 'animal_id', as: 'medicationRecords' });
     };
 
     return Animal;

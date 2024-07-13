@@ -1,107 +1,126 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
+.vaccin-container {
+  max-width: 1000px;
+  margin: 0 auto;
   padding: 20px;
-}
+  font-family: Arial, sans-serif;
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+  .vaccin-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+  }
 
-.header .switches {
-  display: flex;
-  align-items: center;
-}
+  .filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+      margin: 0 15px;
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+      input {
+        opacity: 0;
+        width: 0;
+        height: 0;
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  transition: .4s;
-}
+        &:checked + .slider {
+          background-color: #2196F3;
+        }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: .4s;
-}
+        &:checked + .slider:before {
+          transform: translateX(26px);
+        }
+      }
 
-input:checked + .slider {
-  background-color: #2196F3;
-}
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
 
-input:checked + .slider:before {
-  transform: translateX(26px);
-}
+        &:before {
+          position: absolute;
+          content: "";
+          height: 26px;
+          width: 26px;
+          left: 4px;
+          bottom: 4px;
+          background-color: white;
+          transition: .4s;
+          border-radius: 50%;
+        }
+      }
 
-.cow .slider {
-  background-color: brown;
-}
+      .label {
+        position: absolute;
+        left: 70px;
+        top: 50%;
+        transform: translateY(-50%);
+        white-space: nowrap;
+      }
+    }
+  }
 
-.cow input:checked + .slider {
-  background-color: brown;
-}
+  .table-container {
+    overflow-x: auto;
+  }
 
-.pig .slider {
-  background-color: pink;
-}
+  .vaccin-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
 
-.pig input:checked + .slider {
-  background-color: pink;
-}
+    th {
+      background-color: #f8f8f8;
+      font-weight: bold;
+      color: #333;
+      text-transform: uppercase;
+    }
 
-.slider.round {
-  border-radius: 34px;
-}
+    .cow-row {
+      background-color: #e6f3ff;
+      &:hover {
+        background-color: #d1e8ff;
+      }
+    }
 
-.slider.round:before {
-  border-radius: 50%;
-}
+    .pig-row {
+      background-color: #ffebee;
+      &:hover {
+        background-color: #ffcdd2;
+      }
+    }
+  }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
+  .no-data {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin-top: 20px;
+  }
 
-th, td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
+  .loading, .error {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+  }
 
-th {
-  background-color: #f2f2f2;
-}
-
-.cow-row {
-  background-color: #ffecb3;
-}
-
-.pig-row {
-  background-color: #ffcccb;
+  .error {
+    color: #d32f2f;
+  }
 }

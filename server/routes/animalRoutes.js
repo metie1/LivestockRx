@@ -1,17 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { Animal } = require('../models');
+const animalController = require('../controllers/animalController');
+const authMiddleware = require('../middleware/auth');
 
-router.get('/animals', async (req, res) => {
-    try {
-        const animals = await Animal.findAll({
-            attributes: ['id', 'tag_number', 'species']
-        });
-        res.json(animals);
-    } catch (error) {
-        console.error('Error fetching animals:', error);
-        res.status(500).json({ message: 'Error fetching animals', error: error.message });
-    }
-});
+router.get('/animals', authMiddleware, animalController.getAllAnimals);
+router.get('/my-animals', authMiddleware, animalController.getMyAnimals);
+router.get('/animals/:id', authMiddleware, animalController.getAnimalDetails);
+router.post('/animals', authMiddleware, animalController.createAnimal);
 
 module.exports = router;

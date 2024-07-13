@@ -1,118 +1,152 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Conversation.scss';
+import axios from 'axios';
 
 const Conversation = () => {
-  const [form, setForm] = useState({
-    tag: '',
-    temperature: '',
-    appetite: '',
-    breathing: '',
-    nose: '',
-    energy: '',
-    eyes: '',
-    saliva: '',
-    legs: '',
-    urine: '',
-    stool: '',
-    conjunctiva: ''
-  });
+  const [animalType, setAnimalType] = useState('cow');
+  const [tag, setTag] = useState('');
+  const [symptoms, setSymptoms] = useState({});
+  const [possibleDiseases, setPossibleDiseases] = useState([]);
+  const [animalInfo, setAnimalInfo] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+  const cowSymptoms = [
+    { name: 'fever', label: '발열' },
+    { name: 'diarrhea', label: '설사' },
+    { name: 'respiratoryDistress', label: '호흡 곤란' },
+    { name: 'anorexia', label: '식욕 부진' },
+    { name: 'hemorrhage', label: '출혈' },
+    { name: 'jaundice', label: '황달' },
+    { name: 'nasalDischarge', label: '비강 분비물' },
+  ];
+
+  const pigSymptoms = [
+    { name: 'fever', label: '발열' },
+    { name: 'diarrhea', label: '설사' },
+    { name: 'respiratoryDistress', label: '호흡 곤란' },
+    { name: 'anorexia', label: '식욕 부진' },
+    { name: 'vomiting', label: '구토' },
+    { name: 'skinRash', label: '피부 발진' },
+  ];
+
+  const diseases = {
+    cow: {
+      fever: ['브루셀라병', '장독혈증', '만헤이미아 폐렴'],
+      diarrhea: ['장독혈증', '살모넬라증'],
+      respiratoryDistress: ['만헤이미아 폐렴', '소바이러스성설사'],
+      anorexia: ['만헤이미아 폐렴', '장독혈증'],
+      hemorrhage: ['장독혈증', '소바이러스성설사'],
+      jaundice: ['장독혈증'],
+      nasalDischarge: ['만헤이미아 폐렴'],
+    },
+    pig: {
+      fever: ['돼지유행성설사', '돼지인플루엔자', '살모넬라증', '돼지생식기호흡기증후군'],
+      diarrhea: ['돼지유행성설사', '대장균성설사', '살모넬라증', '클로스트리디움 디피실 연관 질병'],
+      respiratoryDistress: ['돼지인플루엔자', '돼지생식기호흡기증후군'],
+      anorexia: ['돼지유행성설사', '돼지인플루엔자'],
+      vomiting: ['돼지유행성설사'],
+      skinRash: ['톡소플라즈마병'],
+    },
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    updatePossibleDiseases();
+  }, [symptoms, animalType]);
+
+  const updatePossibleDiseases = () => {
+    const selectedSymptoms = Object.entries(symptoms)
+      .filter(([_, value]) => value)
+      .map(([key, _]) => key);
+
+    const newPossibleDiseases = [...new Set(
+      selectedSymptoms.flatMap(symptom => diseases[animalType][symptom] || [])
+    )];
+
+    setPossibleDiseases(newPossibleDiseases);
+  };
+
+  const handleSymptomChange = (e) => {
+    setSymptoms({ ...symptoms, [e.target.name]: e.target.checked });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    try {
+      const response = await axios.post('http://localhost:5000/api/health-check', {
+        animalType,
+        tag,
+        symptoms,
+      });
+      setAnimalInfo(response.data);
+    } catch (error) {
+      console.error('Error submitting health check:', error);
+    }
   };
 
   return (
     <div className="conversation-form">
+      <h2>건강 체크</h2>
       <form onSubmit={handleSubmit}>
-        <label>
-          개체 태그:
-          <input
-            type="text"
-            name="tag"
-            value={form.tag}
-            onChange={handleChange}
-            placeholder="개체 태그를 입력하세요"
-          />
-        </label>
-        <fieldset>
-          <legend>체온:</legend>
-          <label><input type="radio" name="temperature" value="높은" onChange={handleChange} /> 높은</label>
-          <label><input type="radio" name="temperature" value="낮은" onChange={handleChange} /> 낮은</label>
-          <label><input type="radio" name="temperature" value="정상" onChange={handleChange} /> 정상</label>
+        <div className="form-group">
+          <label>
+            동물 종류:
+            <select value={animalType} onChange={(e) => setAnimalType(e.target.value)}>
+              <option value="cow">소</option>
+              <option value="pig">돼지</option>
+            </select>
+          </label>
+        </div>
+        <div className="form-group">
+          {/** 
+          <label>
+            개체 태그:
+            <input
+              type="text"
+              value={tag}
+              onChange={(e) => setTag(e.target.value)}
+              placeholder="개체 태그를 입력하세요"
+            />
+          </label>
+          */}
+        </div>
+        <fieldset className="form-group">
+          <legend>증상:</legend>
+          {(animalType === 'cow' ? cowSymptoms : pigSymptoms).map((symptom) => (
+            <label key={symptom.name} className="checkbox-label">
+              <input
+                type="checkbox"
+                name={symptom.name}
+                checked={symptoms[symptom.name] || false}
+                onChange={handleSymptomChange}
+              />
+              {symptom.label}
+            </label>
+          ))}
         </fieldset>
-        <fieldset>
-          <legend>식욕부진:</legend>
-          <label><input type="radio" name="appetite" value="식욕부진" onChange={handleChange} /> 식욕부진</label>
-          <label><input type="radio" name="appetite" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>호흡:</legend>
-          <label><input type="radio" name="breathing" value="가쁨" onChange={handleChange} /> 가쁨</label>
-          <label><input type="radio" name="breathing" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>코흘림:</legend>
-          <label><input type="radio" name="nose" value="있음" onChange={handleChange} /> 있음</label>
-          <label><input type="radio" name="nose" value="없음" onChange={handleChange} /> 없음</label>
-        </fieldset>
-        <fieldset>
-          <legend>원기:</legend>
-          <label><input type="radio" name="energy" value="무리와 따로 놈" onChange={handleChange} /> 무리와 따로 놈</label>
-          <label><input type="radio" name="energy" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>눈 점막:</legend>
-          <label><input type="radio" name="eyes" value="창백" onChange={handleChange} /> 창백</label>
-          <label><input type="radio" name="eyes" value="황색" onChange={handleChange} /> 황색</label>
-          <label><input type="radio" name="eyes" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>침:</legend>
-          <label><input type="radio" name="saliva" value="과다" onChange={handleChange} /> 과다</label>
-          <label><input type="radio" name="saliva" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>다리:</legend>
-          <label><input type="radio" name="legs" value="걸음걸이 이상" onChange={handleChange} /> 걸음걸이 이상</label>
-          <label><input type="radio" name="legs" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>오줌:</legend>
-          <label><input type="radio" name="urine" value="이상" onChange={handleChange} /> 이상</label>
-          <label><input type="radio" name="urine" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>변:</legend>
-          <label><input type="radio" name="stool" value="이상" onChange={handleChange} /> 이상</label>
-          <label><input type="radio" name="stool" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <fieldset>
-          <legend>결막:</legend>
-          <label><input type="radio" name="conjunctiva" value="이상" onChange={handleChange} /> 이상</label>
-          <label><input type="radio" name="conjunctiva" value="정상" onChange={handleChange} /> 정상</label>
-        </fieldset>
-        <button type="submit" className="submit-button">제출</button>
-        <button type="button" className="reset-button" onClick={() => setForm({
-          tag: '',
-          temperature: '',
-          appetite: '',
-          breathing: '',
-          nose: '',
-          energy: '',
-          eyes: '',
-          saliva: '',
-          legs: '',
-          urine: '',
-          stool: '',
-          conjunctiva: ''
-        })}>변환</button>
+        <div className="form-buttons">
+          {/*<button type="submit" className="submit-button">제출</button>*/}
+          <button type="reset" className="reset-button" onClick={() => setSymptoms({})}>초기화</button>
+        </div>
       </form>
+
+      {possibleDiseases.length > 0 && (
+        <div className="results">
+          <h3>가능성 있는 질병:</h3>
+          <ul>
+            {possibleDiseases.map((disease, index) => (
+              <li key={index}>{disease}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {animalInfo && (
+        <div className="results">
+          <h3>개체 정보:</h3>
+          <p>태그: {animalInfo.tag}</p>
+          <p>마지막 백신 접종일: {animalInfo.lastVaccinationDate}</p>
+          <p>최근 투약 기록: {animalInfo.lastMedication}</p>
+        </div>
+      )}
     </div>
   );
 };

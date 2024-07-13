@@ -200,3 +200,45 @@ th {
   position: absolute;
   right: 10px; /* Adjust as needed for spacing */
 }
+
+
+
+.event-content {
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.85em;
+
+  &.vaccine {
+    background-color: rgba(0, 128, 255, 0.2);
+    border: 1px solid rgba(0, 128, 255, 0.5);
+  }
+
+  &.medication {
+    background-color: rgba(255, 128, 0, 0.2);
+    border: 1px solid rgba(255, 128, 0, 0.5);
+  }
+
+  &.checkup {
+    background-color: rgba(0, 255, 128, 0.2);
+    border: 1px solid rgba(0, 255, 128, 0.5);
+  }
+
+  .event-icon {
+    margin-right: 4px;
+  }
+
+  .event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.tippy-box {
+  background-color: #333;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.9em;
+}

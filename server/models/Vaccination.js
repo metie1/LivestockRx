@@ -30,10 +30,18 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.NOW,
             field: 'updated_at',
         },
+        type: {
+            type: DataTypes.ENUM('vaccination', 'medication'),
+            allowNull: false,
+        }
     }, {
         timestamps: false,
         tableName: 'Vaccinations',
     });
+
+    Vaccination.associate = function(models) {
+        Vaccination.belongsTo(models.Animal, { foreignKey: 'animal_id', as: 'animal' });
+    };
 
     return Vaccination;
 };

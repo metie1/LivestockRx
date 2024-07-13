@@ -1,0 +1,165 @@
+$primary-color: #28a745;
+$secondary-color: #2c3e50;
+$background-color: #ecf0f1;
+$text-color: #333;
+$border-color: #bdc3c7;
+
+.medication-info-container {
+  display: flex;
+  padding: 20px;
+  background-color: $background-color;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+}
+
+.medication-list {
+  width: 30%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    color: $primary-color;
+    margin-bottom: 20px;
+  }
+
+  .search-bar {
+    margin-bottom: 20px;
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $border-color;
+      border-radius: 4px;
+    }
+  }
+
+  .sort-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    button {
+      padding: 10px;
+      border: none;
+      background-color: $primary-color;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: lighten($primary-color, 20%);
+      }
+    }
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    li {
+      cursor: pointer;
+      padding: 10px;
+      border-bottom: 1px solid $border-color;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: lighten($primary-color, 40%);
+      }
+
+      &.active {
+        background-color: $primary-color;
+        color: white;
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      margin: 0 5px;
+      padding: 5px 10px;
+      border: none;
+      background-color: $primary-color;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: lighten($primary-color, 20%);
+      }
+
+      &.active {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }
+}
+
+.medication-details {
+  width: 65%;
+  margin-left: 5%;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    color: $secondary-color;
+    margin-bottom: 20px;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+
+    .info-item {
+      background-color: $background-color;
+      padding: 15px;
+      border-radius: 8px;
+
+      h3 {
+        color: $primary-color;
+        margin-bottom: 10px;
+      }
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .info-section {
+    margin-bottom: 20px;
+
+    h3 {
+      color: $secondary-color;
+      margin-bottom: 10px;
+    }
+
+    p {
+      line-height: 1.6;
+    }
+  }
+}
+
+.loading, .error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.2em;
+  color: $secondary-color;
+}
+
+.error {
+  color: #e74c3c;
+}
