@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             field: 'updated_at',
         },
         type: {
-            type: DataTypes.ENUM('vaccination', 'medication'),
+            type: DataTypes.STRING,
             allowNull: false,
         }
     }, {

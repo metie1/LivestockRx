@@ -17,7 +17,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', { username, password, email, role });
+      await axios.post('/api/auth/signup', { username, password, email, role });
       setError(''); // 오류 메시지 초기화
       //localStorage.setItem('token', response.data.token);
       navigate('/login'); // 로그인 페이지로 리디렉션

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors'); 
 const db = require('./models');
 const dotenv = require('dotenv');
+const path = require('path');
 dotenv.config();
 const authRoutes = require('./routes/authRoutes');
 const calendarRoutes = require('./routes/calendarRoutes');
@@ -17,11 +18,35 @@ const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
+console.log('JWT_SECRET:', process.env.JWT_SECRET);
+
+// 수정버전 2
+/*
+const allowedOrigins = process.env.ALLOWED_ORIGINS 
+  ? process.env.ALLOWED_ORIGINS.split(',') 
+  : ['http://localhost:3000'];
+*/
+
 // 미들웨어 설정
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: ['http://localhost:3000', 'https://yourapp.ngrok.io'],
+
+  // 수정버전 2
+  /*
+  origin: function(origin, callback) {
+    const allowedOrigins = ['http://localhost:3000', 'https://15d2-59-2-103-225.ngrok-free.app'];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  */
+
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  // 수정버전
+  credentials: true
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,6 +68,14 @@ app.use('/api/users', userRoutes);
 app.use('/api', healthCheckRoutes);
 
 app.use('/api', conversationRoutes);
+
+// React 앱의 정적 파일 제공
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+// API가 아닌 모든 요청을 React 앱으로 전달
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 // 에러 핸들러 설정
 app.use((req, res, next) => {

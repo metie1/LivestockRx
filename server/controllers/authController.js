@@ -44,6 +44,13 @@ exports.login = async (req, res) => {
     );
     console.log(`Total login time: ${Date.now() - startTime}ms`);
 
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not defined');
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+
+    console.log('JWT_SECRET:', process.env.JWT_SECRET);
+
     console.log('Token created, sending response');
     res.json({ 
       message: 'Login successful',

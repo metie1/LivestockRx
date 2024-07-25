@@ -14,7 +14,7 @@ const Vaccin = () => {
       try {
         setLoading(true);
         const token = localStorage.getItem('token');
-        const { data } = await axios.get('http://localhost:5000/api/vaccinations', {
+        const { data } = await axios.get('/api/vaccinations', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setVaccinations(data);
@@ -29,7 +29,7 @@ const Vaccin = () => {
   }, []);
 
   const filteredVaccinations = vaccinations.filter(v => 
-    (showCows && v.animal.species === 'cow') || (showPigs && v.animal.species === 'pig')
+    (showCows && v.species === 'cow') || (showPigs && v.species === 'pig')
   );
 
   if (loading) return <div className="loading">로딩 중...</div>;
@@ -71,10 +71,10 @@ const Vaccin = () => {
             </thead>
             <tbody>
               {filteredVaccinations.map(v => (
-                <tr key={v.id} className={v.animal.species === 'cow' ? 'cow-row' : 'pig-row'}>
-                  <td>{v.animal.tag_number}</td>
-                  <td>{v.animal.species === 'cow' ? '소' : '돼지'}</td>
-                  <td>{v.vaccine_name}</td>
+                <tr key={v.id} className={v.species === 'cow' ? 'cow-row' : 'pig-row'}>
+                  <td>{v.animalTag}</td>
+                  <td>{v.species === 'cow' ? '소' : '돼지'}</td>
+                  <td>{v.vaccineName}</td>
                   <td>{new Date(v.date).toLocaleDateString()}</td>
                 </tr>
               ))}

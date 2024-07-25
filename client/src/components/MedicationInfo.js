@@ -22,7 +22,7 @@ function MedicationInfo() {
     const fetchMedications = async () => {
         try {
             console.log('Fetching medications...');
-            const response = await axios.get('http://localhost:5000/api/medications'); // API 엔드포인트 적절히 수정
+            const response = await axios.get('/api/medications'); // API 엔드포인트 적절히 수정
             console.log('Medications data:', response.data);
 
             setMedications(response.data);

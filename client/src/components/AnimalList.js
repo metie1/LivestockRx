@@ -22,7 +22,7 @@ const AnimalList = () => {
     const fetchAnimals = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:5000/api/my-animals', {
+            const response = await axios.get('/api/my-animals', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAnimals(response.data);
@@ -40,7 +40,7 @@ const AnimalList = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/animals', newAnimal, {
+            await axios.post('/api/animals', newAnimal, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
             });
             setNewAnimal({

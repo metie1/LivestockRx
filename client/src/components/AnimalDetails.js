@@ -16,7 +16,7 @@ function AnimalDetails() {
     const fetchAnimalDetails = async () => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:5000/api/animals/${id}`, {
+            const response = await axios.get(`/api/animals/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setAnimal(response.data);
@@ -42,7 +42,7 @@ function AnimalDetails() {
                     <p><strong>종:</strong> {animal.species === 'cow' ? '소' : '돼지'}</p>
                     <p><strong>성별:</strong> {animal.gender === 'male' ? '수컷' : '암컷'}</p>
                     <p><strong>체중:</strong> {animal.weight} kg</p>
-                    <p><strong>생년월일:</strong> {new Date(animal.birth_date).toLocaleDateString()}</p>
+                    <p><strong>출생년도:</strong> {new Date(animal.birth_date).toLocaleDateString()}</p>
                     {animal.slaughter_date && <p><strong>도축일자:</strong> {new Date(animal.slaughter_date).toLocaleDateString()}</p>}
                 </div>
                 <div className="animal-metadata">

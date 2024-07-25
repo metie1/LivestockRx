@@ -15,7 +15,7 @@ const MyPage = () => {
 
   const fetchUserData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users/me', {
+      const response = await axios.get('/api/users/me', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setUser(response.data);
@@ -42,7 +42,7 @@ const MyPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:5000/api/users/me', editedUser, {
+      await axios.put('/api/users/me', editedUser, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setUser(editedUser);
@@ -57,7 +57,7 @@ const MyPage = () => {
   const handleDeleteAccount = async () => {
     if (window.confirm('정말로 계정을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
       try {
-        await axios.delete('http://localhost:5000/api/users/me', {
+        await axios.delete('/api/users/me', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         logout();
